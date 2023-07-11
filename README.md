@@ -2,5 +2,5 @@
 Backend, MongoDB model, for 50.003 ESC C1 I2
 
 To run:
-npm i
+npm i <br />
 node index.js
