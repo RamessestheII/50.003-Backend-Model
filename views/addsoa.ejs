@@ -1,0 +1,16 @@
+<%- include('partials/header'); -%>
+
+<form action="/soa/scan" method="POST" enctype="multipart/form-data">
+    <h2>Add SOA</h2>
+    <label for="email">Select Soa</label>
+    <input type="file" name="soa" required />
+    <div class="upload error"></div>
+    <button>Upload File</button>
+</form>
+
+<script>
+    form.addEventListener('submit', async (e)=>{
+
+    })
+</script>
+<%- include('partials/footer'); -%>
