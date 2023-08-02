@@ -42,7 +42,8 @@ router.post('/scan', upload.single('credit_note'), async(req, res)=> {
     // in case of multi-page pdf upload
     catch(err){
       filePath = filePath.slice(0, -6) + '-01' + '.jpg'
-      fileData = fs.readFileSync(filePath)
+      try{fileData = fs.readFileSync(filePath)}
+        catch(err){res.status(500).end()}
     }
 
   // send file data to ML server

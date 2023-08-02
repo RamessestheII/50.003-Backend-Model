@@ -72,7 +72,8 @@ router.post('/scaninv', uploadInv.single('invoice'), async(req, res)=> {
     // in case of multi-page pdf upload
     catch(err){
       filePath = filePath.slice(0, -6) + '-01' + '.jpg'
-      fileData = fs.readFileSync(filePath)
+      try{fileData = fs.readFileSync(filePath)}
+        catch(err){res.status(500).end()}
     }
 
   // send file data to ML server
@@ -107,7 +108,11 @@ router.post('/scanrec', uploadRec.single('receipt'), async(req, res)=> {
     filePath = filePath.slice(0, -4) + '-1' + '.jpg'
   }
 
-  res.send(filePath)
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err){res.status(400).send("Receipt length cannot exceed one page")}
+    else{res.send(filePath)}
+  });
+  
 });
 
 router.post('/add', async(req, res)=> {
