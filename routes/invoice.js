@@ -110,6 +110,7 @@ router.post('/scanrec', uploadRec.single('receipt'), async(req, res)=> {
 
   fileUtils.fileExists(filePath, (err)=>{
     if (err){
+      // Adjust file path for multi-page pdf --> different file name ending
       filePath = filePath.slice(0, -6) + '-01' + '.jpg'
       fileUtils.fileExists(filePath, (err)=>{
         if (err){res.status(500).send({error: err})}
