@@ -20,6 +20,26 @@ const upload = multer({ storage:storage, fileFilter: fileUtils.uploadFilter})
 // #2: use for storage  in uploads/credit_notes relative to project directory
 // const upload = multer({ dest:'uploads/credit_notes', fileFilter: fileFilter})
 
+router.get('/', async(req, res)=>{
+  const result = await CreditNote.findById(req.body.id)
+  res.send(result)
+})
+
+// find all credit notes which match filter criteria
+router.get('/filter', async(req, res)=>{
+
+  try{
+      const creditNotes = await CreditNote.find(req.query)
+      res.send(creditNotes)
+  }
+      catch(err){res.status(500)}
+})
+
+router.get('/all', async(req, res)=>{
+  const result = await CreditNote.find()
+  res.send(result)
+})
+
 // POST endpoint to submit credit note  in jpeg/jpg/pdf format
 router.post('/scan', upload.single('credit_note'), async(req, res)=> {
   let filePath;
