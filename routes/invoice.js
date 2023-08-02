@@ -50,16 +50,6 @@ router.get('/all', async(req, res)=>{
   res.send(result)
 })
 
-router.get('/file/:id', async(req, res, next)=>{
-  const invoice = await Invoice.findById(req.params.id)
-  if (!invoice){res.status(400).send({error: 'Invoice not found'})}
-  try {
-    res.download(invoice.Path).end()
-  }
-  catch(err){res.status(400)}
-  
-})
-
 // POST endpoint to submit invoice in jpeg/jpg/pdf format
 router.post('/scaninv', uploadInv.single('invoice'), async(req, res)=> {
   let filePath;

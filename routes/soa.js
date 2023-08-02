@@ -22,26 +22,6 @@ const upload = multer({ storage:storage, fileFilter: fileUtils.uploadFilter})
 // #2: use for storage  in uploads/soas relative to project directory
 // const upload = multer({ dest:'uploads/soas', fileFilter: fileFilter})
 
-router.get('/', async(req, res)=>{
-  const result = await Soa.findById(req.body.id)
-  res.send(result)
-})
-
-// find all soas which match filter criteria
-router.get('/filter', async(req, res)=>{
-
-  try{
-      const soas = await Soa.find(req.query)
-      res.send(soas)
-  }
-      catch(err){res.status(500)}
-})
-
-router.get('/all', async(req, res)=>{
-  const result = await Soa.find()
-  res.send(result)
-})
-
 // POST endpoint to submit soa  in jpeg/jpg/pdf format
 router.post('/scan', upload.single('soa'), async(req, res)=> {
   let filePath;

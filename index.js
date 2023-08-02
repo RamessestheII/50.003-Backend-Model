@@ -34,6 +34,6 @@ app.get('/i', (req, res)=>res.render('addInvoice'))
 app.get('/s', (req, res)=>res.render('addSoa'))
 app.get('/c', (req, res)=>res.render('addCreditNote'))
 app.get('/r', (req, res)=>res.render('addReceipt'))
-app.get('/viewinvoice', (req, res)=> res.render('viewinvoice'))
-module.exports = app
+
+
 
