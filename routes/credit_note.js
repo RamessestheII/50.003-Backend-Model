@@ -11,11 +11,7 @@ const ML_SERVER_ADDRESS = 'http://127.0.0.1:5000/'
 
 const storage = multer.diskStorage({
     destination: '/uploads/credit_notes',
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        const fileExtension = file.mimetype.split('/')[1]
-        cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension)
-    }
+    filename: fileUtils.fileName
 })
 
 // #1: use for disk storage as declared in const storage.destination

@@ -13,21 +13,13 @@ const ML_SERVER_ADDRESS = 'http://127.0.0.1:5000/'
 // disk storage engine for invoices
 const invStorage = multer.diskStorage({
     destination: '/uploads/invoices',
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        const fileExtension = file.mimetype.split('/')[1]
-        cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension)
-    }
+    filename: fileUtils.fileName
 })
 
 // disk storage engine for receipts
 const recStorage = multer.diskStorage({
   destination: '/uploads/receipts',
-  filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      const fileExtension = file.mimetype.split('/')[1]
-      cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension)
-  }
+  filename: fileUtils.fileName
 })
 
 // #1: use for disk storage as declared in storage.destination attributes

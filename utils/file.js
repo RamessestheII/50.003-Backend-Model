@@ -10,7 +10,13 @@ function uploadFilter (req, file, cb) {
         cb(null, true)
     }
     else{cb(null, false)}
-  }
+}
+
+function fileName(req, file, cb){
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    const fileExtension = file.mimetype.split('/')[1]
+    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension)
+}
 
 async function pdfToJpeg(filePath){
  
@@ -32,3 +38,4 @@ async function pdfToJpeg(filePath){
 
 module.exports.uploadFilter = uploadFilter
 module.exports.pdfToJpeg = pdfToJpeg
+module.exports.fileName = fileName
