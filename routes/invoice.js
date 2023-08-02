@@ -108,10 +108,16 @@ router.post('/scanrec', uploadRec.single('receipt'), async(req, res)=> {
     filePath = filePath.slice(0, -4) + '-1' + '.jpg'
   }
 
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err){res.status(400).send("Receipt length cannot exceed one page")}
-    else{res.send(filePath)}
-  });
+  fileUtils.fileExists(filePath, (err)=>{
+    if (err){
+      filePath = filePath.slice(0, -6) + '-01' + '.jpg'
+      fileUtils.fileExists(filePath, (err)=>{
+        if (err){res.status(500).send({error: err})}
+        else{res.send({path: filePath})}
+      })
+    }
+    else(res.send({path: filePath}))
+  })
   
 });
 

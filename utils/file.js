@@ -36,6 +36,12 @@ async function pdfToJpeg(filePath){
         })
 }
 
+function fileExists(filePath, cb){
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+        cb(err)
+      });
+}
 module.exports.uploadFilter = uploadFilter
 module.exports.pdfToJpeg = pdfToJpeg
 module.exports.fileName = fileName
+module.exports.fileExists = fileExists
