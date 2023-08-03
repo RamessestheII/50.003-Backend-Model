@@ -2,8 +2,10 @@
 Backend, MongoDB model, for 50.003 ESC C1 I2
 
 To run:<br />
-```npm i <br />
-node index.js```
+```
+npm i
+node index.js
+```
 
 ## Endpoints:
 ### Invoice Routes
@@ -32,7 +34,7 @@ node index.js```
     Soa: _soaid_(object id),
     **Supplier: _supplierid_(object id)**,
 }<br/>
-Product list element format:<br/>
+Product list element format:<br />
 {
     **Product: _productid_(object id)**,
     **Quantity: _quantityofproduct(integer)**,
@@ -41,7 +43,7 @@ Product list element format:<br/>
 ^ bolded fields are required
 
 + Set an invoice to paid, if not currently associated with an soa
-**PUT** localhost:3000/invoice/setpaid **_with request body in following format_**:<br/>
+**PUT** localhost:3000/invoice/setpaid **_with request body in following format_**:<br />
 {
     id: _invoiceid_
 }
