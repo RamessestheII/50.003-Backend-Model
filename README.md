@@ -21,24 +21,24 @@ node index.js
 + Add new invoice
 **POST** localhost:3000/invoice/add **_with request body in following format_**:<br/>
 {<br/>
-    **User: _userid_**(object id),<br/>
-    **InvoiceNumber: _invoicenumber_**(string),<br/>
-    Path: _filepath_(string),<br/>
-    RecPath: _recPath_(string),<br/>
-    **Date: _date_**(string),<br/>
-    BeforeGST: _amountbeforegst_(number),<br/>
-    GST: _gst_(number),<br/>
-    Discount: _discount_(number),<br/>
-    GrandTotal: _grandtotalamount_(number),<br/>
-    **Product: _productlist_**(JSON list: format below),<br/>
-    Soa: _soaid_(object id),<br/>
-    **Supplier: _supplierid_(object id)**,<br/>
+    **User: _userid_** (object id),<br/>
+    **InvoiceNumber: _invoicenumber_** (string),<br/>
+    Path: _filepath_ (string),<br/>
+    RecPath: _recPath_ (string),<br/>
+    **Date: _date_** (string),<br/>
+    BeforeGST: _amountbeforegst_ (number),<br/>
+    GST: _gst_ (number),<br/>
+    Discount: _discount_ (number),<br/>
+    GrandTotal: _grandtotalamount_ (number),<br/>
+    **Product: _productlist_** (JSON list: format below),<br/>
+    Soa: _soaid_ (object id),<br/>
+    **Supplier: _supplierid_ (object id)**,<br/>
 }<br/>
 Product list element format:<br />
 {
-    **Product: _productid_(object id)**,<br/>
-    **Quantity: _quantityofproduct(integer)**,<br/>
-    **UnitCost: _productunitcost_(number)**<br/>
+    **Product: _productid_ (object id)**,<br/>
+    **Quantity: _quantityofproduct (integer)**,<br/>
+    **UnitCost: _productunitcost_ (number)**<br/>
 }<br/>
 ^ bolded fields are required
 
