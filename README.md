@@ -9,7 +9,7 @@ node index.js
 
 ## Endpoints:
 ### Invoice Routes
-+ Return id of specific invoice:<br/>
++ Return a specific invoice by id:<br/>
 **GET** localhost:3000/invoice?id=*invoiceid*
 
 + Return all invoices:<br/>
