@@ -39,7 +39,7 @@ Product list element format:<br />
     **Product: _productid_(object id)**,<br/>
     **Quantity: _quantityofproduct(integer)**,<br/>
     **UnitCost: _productunitcost_(number)**<br/>
-}
+}<br/>
 ^ bolded fields are required
 
 + Set an invoice to paid, if not currently associated with an soa<br/>
