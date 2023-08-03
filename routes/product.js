@@ -5,36 +5,41 @@ const fileUtils = require('../utils/file')
 const Product = require('../models/product')
 
 // find one product using product id
-router.get('/', async(req, res)=>{
-   
-    try{
-        const products = await Product.findById(req.body.id)
-        res.send(products)
+router.get('/', async (req, res) => {
+  try {
+    const data = await Product.findById(req.query.id);
+    if (!data) {
+      return res.status(404).json({ message: 'Document not found' });
     }
-        catch(err){res.status(500)}
-})
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
 
-// find all products which match filter criteria
-router.get('/filter', async(req, res)=>{
-    // add all query parameters to supply to find() function
+router.get('/all', async (req, res) => {
+  try {
+    const data = await Product.find({});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
+
+router.get('/filter', async (req, res) => {
+  try {
     let queryObject = {}
-    if (req.body.SupplierCode){queryObject.SupplierCode=req.body.SupplierCode}
-    if (req.body.RetailCode){queryObject.RetailCode=req.body.RetailCode}
-    if (req.body.Name){queryObject.Name=req.body.Name}
-
-    try{
-        const products = await Product.find(queryObject)
-        res.send(products)
-    }
-        catch(err){res.status(500)}
-})
-
-// find all products
-router.get('/all', async(req, res)=>{
-    const products = await Product.find()
-    res.send(products)
-})
-
+    if (req.query.SupplierCode){queryObject.SupplierCode=req.query.SupplierCode}
+    if (req.query.RetailCode){queryObject.RetailCode=req.query.RetailCode}
+    if (req.query.Name){queryObject.Name=req.query.Name}
+    if (req.query.Supplier){queryObject.Supplier=req.query.Supplier}
+    // TODO: Query by Date
+    const data = await Product.find(queryObject);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
 // POST endpoint to submit product in json format
 router.post('/add', async(req, res)=> {
   

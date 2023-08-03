@@ -4,70 +4,71 @@ const fs = require('fs')
 const multer = require('multer')
 const axios = require('axios')
 const fileUtils = require('../utils/file')
+const ML_SERVER_ADDRESS = require('../utils/const')
 const path = require('path')
 const Invoice = require('../models/invoice')
 
+// use for storage  in uploads/invoices and uploads/receipts relative to project directory
+const uploadInv = multer({ dest:'uploads/invoices', fileFilter: fileUtils.uploadFilter})
+const uploadRec = multer({ dest:'uploads/receipts', fileFilter: fileUtils.uploadFilter})
 
-const ML_SERVER_ADDRESS = 'http://127.0.0.1:5000/'
-
-// disk storage engine for invoices
-const invStorage = multer.diskStorage({
-    destination: '/uploads/invoices',
-    filename: fileUtils.fileName
-})
-
-// disk storage engine for receipts
-const recStorage = multer.diskStorage({
-  destination: '/uploads/receipts',
-  filename: fileUtils.fileName
-})
-
-// #1: use for disk storage as declared in storage.destination attributes
-const uploadInv = multer({ storage:invStorage, fileFilter: fileUtils.uploadFilter})
-const uploadRec = multer({ storage:recStorage, fileFilter: fileUtils.uploadFilter})
-
-// #2: use for storage  in uploads/invoices and uploads/receipts relative to project directory
-// const uploadInv = multer({ dest:'uploads/invoices', fileFilter: fileUtils.uploadFilter})
-// const uploadRec = multer({ dest:'uploads/receipts', fileFilter: fileUtils.uploadFilter})
-
-router.get('/', async(req, res)=>{
-  const result = await Invoice.findById(req.body.id)
-  res.send(result)
-})
-
-// find all invoices which match filter criteria
-router.get('/filter', async(req, res)=>{
-
-  try{
-      const invoices = await Invoice.find(req.query)
-      res.send(invoices)
+router.get('/', async (req, res) => {
+  try {
+    const data = await Invoice.findById(req.query.id);
+    if (!data) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
   }
-      catch(err){res.status(500)}
-})
+});
 
-router.get('/all', async(req, res)=>{
-  const result = await Invoice.find()
-  res.send(result)
-})
+router.get('/all', async (req, res) => {
+  try {
+    const data = await Invoice.find({}).populate('Supplier','SupplierName -_id');
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
+
+router.get('/filter', async (req, res) => {
+  try {
+    let queryObject = {}
+    if (req.query.Paid){queryObject.Paid=req.query.Paid}
+    if (req.query.Supplier){queryObject.Supplier=req.query.Supplier}
+    if (req.query.InvoiceNumber){queryObject.InvoiceNumber=req.query.InvoiceNumber}
+    // TODO: Query by Date
+    const data = await Invoice.find(queryObject).populate('Supplier', 'SupplierName -_id');
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
 
 // POST endpoint to submit invoice in jpeg/jpg/pdf format
 router.post('/scaninv', uploadInv.single('invoice'), async(req, res)=> {
   let filePath;
   try {filePath = req.file.path}
     catch(err){res.status(400).send({error: 'Invalid file type, select jpg, jpeg or pdf'})}
-  
   // convert pdf to jpeg in place
   if (req.file.mimetype==='application/pdf'){
     try{await fileUtils.pdfToJpeg(filePath)}
       catch(err){res.status(500).send({error: 'Could not process file'})}
       fs.unlink(filePath, (err)=>console.log(err))
     // file extension changed to jpg
-    filePath = filePath.slice(0, -4) + '-1' + '.jpg'
+    filePath = filePath + '-1' + '.jpg'
+  }
+  else{
+    // add .jpg to file name
+    fs.renameSync(filePath, filePath + '.jpg')
+    filePath = filePath + '.jpg'
   }
 
    // read file data into a buffer
   let fileData;
-
+  
   try {fileData = fs.readFileSync(filePath)}
     // in case of multi-page pdf upload
     catch(err){
@@ -105,7 +106,12 @@ router.post('/scanrec', uploadRec.single('receipt'), async(req, res)=> {
       catch(err){res.status(500).send({error: 'Could not process file'})}
       fs.unlink(filePath, (err)=>console.log(err))
     // file extension changed to jpg
-    filePath = filePath.slice(0, -4) + '-1' + '.jpg'
+    filePath = filePath + '-1' + '.jpg'
+  }
+  else{
+    // add .jpg to file name
+    fs.renameSync(filePath, filePath + '.jpg')
+    filePath = filePath + '.jpg'
   }
 
   fileUtils.fileExists(filePath, (err)=>{
@@ -128,7 +134,7 @@ router.post('/add', async(req, res)=> {
   let filePath;
   if (req.body.Path){
     filePath = path.format({
-      dir: 'C:\\uploads\\invoices',
+      dir: '\\uploads\\invoices',
       base: path.basename(req.body.Path)
     })
   }
@@ -136,7 +142,7 @@ router.post('/add', async(req, res)=> {
   let recPath;
   if (req.body.RecPath){
     recPath = path.format({
-      dir: 'C:\\uploads\\receipts',
+      dir: '\\uploads\\receipts',
       base: path.basename(req.body.RecPath)
     })
   }

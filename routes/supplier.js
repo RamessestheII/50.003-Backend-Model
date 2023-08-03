@@ -5,35 +5,44 @@ const fileUtils = require('../utils/file')
 const Supplier = require('../models/supplier')
 
 // find one supplier using supplier id
-router.get('/', async(req, res)=>{
-   
-    try{
-        const suppliers = await Supplier.findById(req.body.id)
-        res.send(suppliers)
+router.get('/', async (req, res) => {
+  try {
+    const data = await Supplier.findById(req.query.id);
+    if (!data) {
+      return res.status(404).json({ message: 'Document not found' });
     }
-        catch(err){res.status(500)}
-})
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
 
-// find all suppliers which match filter criteria
-router.get('/filter', async(req, res)=>{
+router.get('/all', async (req, res) => {
+  try {
+    const data = await Supplier.find({});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
 
-    try{
-        const suppliers = await Supplier.find(req.query)
-        res.send(suppliers)
-    }
-        catch(err){res.status(500)}
-})
+router.get('/filter', async (req, res) => {
+  try {
+    let queryObject = {}
+    if (req.query.SupplierName){queryObject.SupplierName=req.query.SupplierName}
+    const data = await Supplier.find(queryObject);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
 
-// find all suppliers
-router.get('/all', async(req, res)=>{
-    const suppliers = await Supplier.find()
-    res.send(suppliers)
-})
 
 // POST endpoint to submit supplier in json format
 router.post('/add', async(req, res)=> {
   
   const supplier = new Supplier({
+    User: req.body.User,
     SupplierName: req.body.SupplierName,
     Contact: req.body.Contact,
     Address: req.body.Address,

@@ -7,40 +7,46 @@ const axios = require('axios')
 const fileUtils = require('../utils/file')
 const Soa = require('../models/soa');
 const Invoice = require('../models/invoice');
+const ML_SERVER_ADDRESS = require('../utils/const')
 
-
-const ML_SERVER_ADDRESS = 'http://127.0.0.1:5000/'
-
-const storage = multer.diskStorage({
-    destination: '/uploads/soas',
-    filename: fileUtils.fileName
-})
-
-// #1: use for disk storage as declared in const storage.destination
-const upload = multer({ storage:storage, fileFilter: fileUtils.uploadFilter})
 
 // #2: use for storage  in uploads/soas relative to project directory
-// const upload = multer({ dest:'uploads/soas', fileFilter: fileFilter})
+const upload = multer({ dest:'uploads/soas', fileFilter: fileUtils.fileFilter})
 
-router.get('/', async(req, res)=>{
-  const result = await Soa.findById(req.body.id)
-  res.send(result)
-})
-
-// find all invoices which match filter criteria
-router.get('/filter', async(req, res)=>{
-
-  try{
-      const soas = await Soa.find(req.query)
-      res.send(soas)
+router.get('/', async (req, res) => {
+  try {
+    const data = await Soa.findById(req.query.id);
+    if (!data) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
   }
-      catch(err){res.status(500)}
-})
+});
 
-router.get('/all', async(req, res)=>{
-  const result = await Soa.find()
-  res.send(result)
-})
+router.get('/all', async (req, res) => {
+  try {
+    const data = await Soa.find({});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
+
+router.get('/filter', async (req, res) => {
+  try {
+    let queryObject = {}
+    if (req.query.Supplier){queryObject.Supplier=req.query.Supplier}
+    if (req.query.Paid){queryObject.Paid=req.query.Paid}
+    if (req.query.PaidDate){queryObject.PaidDate=req.query.PaidDate}
+    // TODO: Query by Date and DueDate
+    const data = await Soa.find(queryObject);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
 
 // POST endpoint to submit soa  in jpeg/jpg/pdf format
 router.post('/scan', upload.single('soa'), async(req, res)=> {
@@ -54,7 +60,12 @@ router.post('/scan', upload.single('soa'), async(req, res)=> {
       catch(err){res.status(500).send({error: 'Could not process file'})}
       fs.unlink(filePath, (err)=>console.log(err))
     // file extension changed to jpg
-    filePath = filePath.slice(0, -4) + '-1' + '.jpg'
+    filePath = filePath + '-1' + '.jpg'
+  }
+  else{
+    // add .jpg to file name
+    fs.renameSync(filePath, filePath + '.jpg')
+    filePath = filePath + '.jpg'
   }
 
    // read file data into a buffer
@@ -90,7 +101,7 @@ router.post('/add', async(req, res)=>{
   let filePath;
   if (req.body.Path){
     filePath = path.format({
-      dir: 'C:\\uploads\\soas',
+      dir: '\\uploads\\soas',
       base: path.basename(req.body.Path)
     })
   }

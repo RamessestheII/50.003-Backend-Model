@@ -4,42 +4,46 @@ const fs = require('fs')
 const multer = require('multer')
 const axios = require('axios')
 const fileUtils = require('../utils/file')
+const path = require('path')
+const ML_SERVER_ADDRESS = require('../utils/const')
 const CreditNote = require('../models/credit_note')
 
 
-const ML_SERVER_ADDRESS = 'http://127.0.0.1:5000/'
 
-const storage = multer.diskStorage({
-    destination: '/uploads/credit_notes',
-    filename: fileUtils.fileName
-})
+// use for storage  in uploads/credit_notes relative to project directory
+const upload = multer({ dest:'uploads/credit_notes', fileFilter: fileUtils.fileFilter})
 
-// #1: use for disk storage as declared in const storage.destination
-const upload = multer({ storage:storage, fileFilter: fileUtils.uploadFilter})
-
-// #2: use for storage  in uploads/credit_notes relative to project directory
-// const upload = multer({ dest:'uploads/credit_notes', fileFilter: fileFilter})
-
-router.get('/', async(req, res)=>{
-  const result = await CreditNote.findById(req.body.id)
-  res.send(result)
-})
-
-// find all invoices which match filter criteria
-router.get('/filter', async(req, res)=>{
-
-  try{
-      const creditNote = await CreditNote.find(req.query)
-      res.send(creditNote)
+router.get('/', async (req, res) => {
+  try {
+    const data = await CreditNote.findById(req.query.id);
+    if (!data) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
   }
-      catch(err){res.status(500)}
-})
+});
 
-router.get('/all', async(req, res)=>{
-  const result = await CreditNote.find()
-  res.send(result)
-})
+router.get('/all', async (req, res) => {
+  try {
+    const data = await CreditNote.find({});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
 
+router.get('/filter', async (req, res) => {
+  try {
+    let queryObject = {}
+    if (req.query.SupplierName){queryObject.SupplierName=req.query.SupplierName}
+    const data = await CreditNote.find(queryObject);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
 // POST endpoint to submit credit note  in jpeg/jpg/pdf format
 router.post('/scan', upload.single('credit_note'), async(req, res)=> {
   let filePath;
@@ -52,7 +56,12 @@ router.post('/scan', upload.single('credit_note'), async(req, res)=> {
       catch(err){res.status(500).send({error: 'Could not process file'})}
       fs.unlink(filePath, (err)=>console.log(err))
     // file extension changed to jpg
-    filePath = filePath.slice(0, -4) + '-1' + '.jpg'
+    filePath = filePath + '-1' + '.jpg'
+  }
+  else{
+    // add .jpg to file name
+    fs.renameSync(filePath, filePath + '.jpg')
+    filePath = filePath + '.jpg'
   }
 
    // read file data into a buffer
@@ -86,7 +95,7 @@ router.post('/add', async(req, res)=>{
   // process file path so only files within /uploads/ can be stored, 
   // prevent accidental deletion of other files
   const filePath = path.format({
-    dir: 'C:\\uploads\\credit_notes',
+    dir: '\\uploads\\credit_notes',
     base: path.basename(req.body.Path)
   })
   const credit_note = new CreditNote({
@@ -94,6 +103,8 @@ router.post('/add', async(req, res)=>{
     Supplier: req.body.Supplier,
     Date: req.body.Date || Date(),
     Path: filePath,
+    GrandTotal: req.body.GrandTotal,
+    Product: req.body.Product
   });
 
   try{
