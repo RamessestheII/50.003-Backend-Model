@@ -10,7 +10,9 @@ const fileUtils = require('./utils/file')
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use(express.static('public'))
+app.use(express.static('uploads'))
+// Access static display of images in /uploads
+// e.g. localhost:3000/invoices/invoicename.jpg displays invoicename.jpg in the browser
 
 const MONGODB_URI =
 'mongodb://localhost/newecon';

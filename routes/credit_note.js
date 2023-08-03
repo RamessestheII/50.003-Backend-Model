@@ -95,7 +95,7 @@ router.post('/add', async(req, res)=>{
   // process file path so only files within /uploads/ can be stored, 
   // prevent accidental deletion of other files
   const filePath = path.format({
-    dir: '\\uploads\\credit_notes',
+    dir: 'uploads\\credit_notes',
     base: path.basename(req.body.Path)
   })
   const credit_note = new CreditNote({

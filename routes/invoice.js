@@ -134,7 +134,7 @@ router.post('/add', async(req, res)=> {
   let filePath;
   if (req.body.Path){
     filePath = path.format({
-      dir: '\\uploads\\invoices',
+      dir: 'uploads\\invoices',
       base: path.basename(req.body.Path)
     })
   }
@@ -142,7 +142,7 @@ router.post('/add', async(req, res)=> {
   let recPath;
   if (req.body.RecPath){
     recPath = path.format({
-      dir: '\\uploads\\receipts',
+      dir: 'uploads\\receipts',
       base: path.basename(req.body.RecPath)
     })
   }

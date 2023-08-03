@@ -101,7 +101,7 @@ router.post('/add', async(req, res)=>{
   let filePath;
   if (req.body.Path){
     filePath = path.format({
-      dir: '\\uploads\\soas',
+      dir: 'uploads\\soas',
       base: path.basename(req.body.Path)
     })
   }
