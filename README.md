@@ -18,7 +18,7 @@ node index.js
 + Return all invoices matching filter (by Paid, Supplier and InvoiceNumber- all optional, not ordered):<br/>
 **GET** localhost:3000/invoice/filter?Paid=*boolean*&Supplier=*supplierid*&InvoiceNumber=*invoicenumber*
 
-+ Add new invoice
++ Add new invoice<br/>
 **POST** localhost:3000/invoice/add **_with request body in following format_**:<br/>
 {<br/>
     **User: _userid_** (object id),<br/>
