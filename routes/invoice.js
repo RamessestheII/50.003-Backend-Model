@@ -148,7 +148,7 @@ router.post('/add', async(req, res)=> {
   }
 
   const invoice = new Invoice({
-    // User: req.body.User
+    User: req.body.User,
     InvoiceNumber: req.body.InvoiceNumber,
     Path: filePath,
     RecPath: recPath,
