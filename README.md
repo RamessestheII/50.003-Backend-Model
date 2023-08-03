@@ -32,7 +32,7 @@ node index.js
     GrandTotal: _grandtotalamount_ (number),<br/>
     **Product: _productlist_** (JSON list: format below),<br/>
     Soa: _soaid_ (object id),<br/>
-    **Supplier: _supplierid_ (object id)**,<br/>
+    **Supplier: _supplierid_** (object id),<br/>
 }<br/>
 Product list element format:<br />
 {
