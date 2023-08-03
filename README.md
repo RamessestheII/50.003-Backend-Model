@@ -24,7 +24,7 @@ node index.js
     **User: _userid_** (object id),<br/>
     **InvoiceNumber: _invoicenumber_** (string),<br/>
     Path: _filepath_ (string),<br/>
-    RecPath: _recPath_ (string),<br/>
+    RecPath: _receiptpath_ (string),<br/>
     **Date: _date_** (string),<br/>
     BeforeGST: _amountbeforegst_ (number),<br/>
     GST: _gst_ (number),<br/>
@@ -42,7 +42,7 @@ Product list element format:<br />
 }<br/>
 ^ bolded fields are required
 
-+ Set an invoice to paid, if not currently associated with an soa<br/>
++ Set an invoice to paid, if not currently associated with an soa:<br/>
 **PUT** localhost:3000/invoice/setpaid **_with request body in following format_**:<br />
 {<br/>
     id: _invoiceid_<br/>
