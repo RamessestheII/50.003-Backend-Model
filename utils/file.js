@@ -1,7 +1,6 @@
-const { all } = require('axios');
 const fs = require('fs')
 const path = require('path');
-const pdf = require('pdf-poppler');
+const { exec } = require('child_process');
 
 // function to accept only pdf and jpeg/jpg file types to be uploaded
 function uploadFilter (req, file, cb) {
@@ -18,23 +17,19 @@ function fileName(req, file, cb){
     cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension)
 }
 
-async function pdfToJpeg(filePath){
- 
-    let opts = {
-        format: 'jpeg',
-        out_dir: path.dirname(filePath),
-        out_prefix: path.basename(filePath, path.extname(filePath)),
-        page: 1
-    }
-    
-    await pdf.convert(filePath, opts)
-        .then(res => {
-            console.log('PDF to JPG successful');
-        })
-        .catch(error => {
-            console.error(error);
-        })
-}
+async function pdfToJpeg(pdfPath) {
+    return new Promise((resolve, reject) => {
+      const jpgPath = pdfPath + '.jpg'
+      const command = `convert -density 300 "${pdfPath}[0]" "${jpgPath}"`;;
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
 
 function fileExists(filePath, cb){
     fs.access(filePath, fs.constants.F_OK, (err) => {

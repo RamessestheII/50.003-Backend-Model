@@ -52,19 +52,26 @@ router.post('/scaninv', uploadInv.single('invoice'), async(req, res)=> {
   let filePath;
   try {filePath = req.file.path}
     catch(err){res.status(400).send({error: 'Invalid file type, select jpg, jpeg or pdf'})}
+
   // convert pdf to jpeg in place
   if (req.file.mimetype==='application/pdf'){
-    try{await fileUtils.pdfToJpeg(filePath)}
-      catch(err){res.status(500).send({error: 'Could not process file'})}
-      fs.unlink(filePath, (err)=>console.log(err))
-    // file extension changed to jpg
-    filePath = filePath + '-1' + '.jpg'
+    try{
+      await fileUtils.pdfToJpeg(filePath)
+      fs.unlink(filePath, (err)=>{if (err){console.log(err)}})
+    }
+      catch(err){
+        fs.unlink(filePath, (err)=>console.log(err))
+        return res.status(500).send({error: 'PDF to JPG failed'})
+      }
+
   }
   else{
     // add .jpg to file name
     fs.renameSync(filePath, filePath + '.jpg')
-    filePath = filePath + '.jpg'
   }
+
+  // fix file path before returning to user
+  filePath = filePath + '.jpg'
 
    // read file data into a buffer
   let fileData;
@@ -72,9 +79,7 @@ router.post('/scaninv', uploadInv.single('invoice'), async(req, res)=> {
   try {fileData = fs.readFileSync(filePath)}
     // in case of multi-page pdf upload
     catch(err){
-      filePath = filePath.slice(0, -6) + '-01' + '.jpg'
-      try{fileData = fs.readFileSync(filePath)}
-        catch(err){res.status(500).end()}
+      return res.status(500).send({error: err})
     }
 
   // send file data to ML server
@@ -98,30 +103,31 @@ router.post('/scaninv', uploadInv.single('invoice'), async(req, res)=> {
 router.post('/scanrec', uploadRec.single('receipt'), async(req, res)=> {
   let filePath;
   try {filePath = req.file.path}
-    catch(err){res.status(400).send({error: 'Invalid file type, select jpg, jpeg or pdf'})}
+    catch(err){return res.status(400).send({error: 'Invalid file type, select jpg, jpeg or pdf'})}
   
   // convert pdf to jpeg in place
   if (req.file.mimetype==='application/pdf'){
-    try{await fileUtils.pdfToJpeg(filePath)}
-      catch(err){res.status(500).send({error: 'Could not process file'})}
-      fs.unlink(filePath, (err)=>console.log(err))
-    // file extension changed to jpg
-    filePath = filePath + '-1' + '.jpg'
+    try{
+      await fileUtils.pdfToJpeg(filePath)
+      fs.unlink(filePath, (err)=>{if (err){console.log(err)}})
+    }
+      catch(err){
+        fs.unlink(filePath, (err)=>console.log(err))
+        return res.status(500).send({error: 'PDF to JPG failed'})
+      }
+
   }
   else{
     // add .jpg to file name
     fs.renameSync(filePath, filePath + '.jpg')
-    filePath = filePath + '.jpg'
   }
+
+  // fix file path before returning to user
+  filePath = filePath + '.jpg'
 
   fileUtils.fileExists(filePath, (err)=>{
     if (err){
-      // Adjust file path for multi-page pdf --> different file name ending
-      filePath = filePath.slice(0, -6) + '-01' + '.jpg'
-      fileUtils.fileExists(filePath, (err)=>{
-        if (err){res.status(500).send({error: err})}
-        else{res.send({path: filePath})}
-      })
+      return res.status(500).send({error: err})
     }
     else(res.send({path: filePath}))
   })

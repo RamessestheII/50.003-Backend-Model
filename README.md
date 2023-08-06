@@ -64,5 +64,25 @@ Expect returned data in the format {path: _filepath_}
 + Delete an invoice<br/>
 **DELETE** localhost:3000/invoice/delete/_invoiceid_
 
+## Dependencies:
++ Windows:<br/>
+Install Image Magick from https://imagemagick.org/script/download.php#windows<br/>
+Install Ghostscript from https://www.ghostscript.com/releases/gsdnld.html<br/>
+
++ MacOS:<br/>
+Check if ghostscript and imagemagick are installed:<br/>
+```
+magick --version
+gs --version
+```
+```
+brew install imagemagick
+brew install ghostscript
+```
++ Ubuntu Linux:<br/>
+```
+sudo apt-get install imagemagick
+```
+
 
 
