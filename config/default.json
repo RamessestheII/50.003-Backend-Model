@@ -1,3 +1,5 @@
 {
-    "mongoURI": "mongodb+srv://devauth:devauth@cluster0.owmcfy8.mongodb.net/?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv://devauth:devauth@cluster0.owmcfy8.mongodb.net/?retryWrites=true&w=majority",
+    "jwtSecret": "mysecrettoken"
+
 }

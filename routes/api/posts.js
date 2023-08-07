@@ -7,7 +7,7 @@ const router = express.Router();
 //@desc     Test route
 //@access   Public (no auth token needed)
 router.get("/", (req, res) => {
-    res.send("Profile route")
+    res.send("Post route")
 });
 
 
