@@ -62,8 +62,9 @@ async (req, res) => {
         //See if user exists
         //If they alr exist, raise error since multi email not allowed
         let user = await User.findOne({email});
-
-        if (user) {
+        
+        //ALER WARNING DEBUG
+        if (!user) {
             return res.status(400).json({
                 errors: [{
                     msg: "Invalid credentials!"
@@ -74,6 +75,7 @@ async (req, res) => {
         //compare password with hashed one
         const isMatch = await bcrypt.compare(password, user.password);
 
+        // if no password matches:
         if (!isMatch) {
             return res
             .status(400)

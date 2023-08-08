@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server",
-    "server": "nodemon server"
+    "server": "nodemon server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Valerie",
   "license": "ISC",
@@ -19,7 +21,8 @@
     "mongodb": "^5.7.0",
     "mongoose": "^7.4.2",
     "normalize-url": "^8.0.0",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "concurrently": "^8.2.0",
