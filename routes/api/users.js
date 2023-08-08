@@ -91,13 +91,12 @@ async (req, res) => {
         jwt.sign(
             payload,
             config.get('jwtSecret'),
-            {expiresIn: 3600000},
+            {expiresIn: 360000},
             (err, token) => {
               if (err) throw err;
               //can also send back user ID if wan...
               res.json({ token });
-            }
-          );
+            });
 
         
     } catch(err) {

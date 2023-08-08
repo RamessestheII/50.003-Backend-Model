@@ -9,21 +9,17 @@ module.exports = function(req, res, next) {
     
     //check if no token:
     // if route is protected and using dis middleware, 401.
-    if (!token) {
-        return res.status(401).json({
-            msg: "No token, authorization denied!"
-        });
+    if (!token) {return res.status(401).json({ msg: 'No token, authorization denied!' });
     }
 
     //If there is token, verify token
     try{
         //decode the token
         //2 params: token in header and secret from config
-        const decoded = jwt.verify(
-            token, config.get("jwtSecret"));
-            //assign req.user the value of decoded user in header
-            req.user = decoded.user;
-            next();
+        const decoded = jwt.verify( token, config.get("jwtSecret"));
+        //assign req.user the value of decoded user in header
+        req.user = decoded.user;
+        next();
 
     } catch(err) {
         //token but not valid
@@ -32,4 +28,4 @@ module.exports = function(req, res, next) {
     }
 
 
-}
+};
