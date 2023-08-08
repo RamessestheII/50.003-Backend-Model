@@ -10,9 +10,15 @@ const fileUtils = require('./utils/file')
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use(express.static('uploads'))
+// Middleware to add 'Access-Control-Allow-Origin' header
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  });
+  
 // Access static display of images in /uploads
 // e.g. localhost:3000/invoices/invoicename.jpg displays invoicename.jpg in the browser
+app.use(express.static('uploads'))
 
 const MONGODB_URI =
 'mongodb://localhost/newecon';
@@ -25,6 +31,7 @@ mongoose.connect(MONGODB_URI)
     .then(()=> app.listen(3000))
     .catch((err)=>console.log('Could not connect to MongoDB', err))
 
+// routes to add, get, upload, delete, modify (with restriction) and export (invoices, soas and products)
 app.use('/invoice', invoiceRoutes)
 app.use('/soa', soaRoutes)
 app.use('/creditnote', creditNoteRoutes)
