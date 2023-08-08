@@ -10,10 +10,17 @@ const fileUtils = require('./utils/file')
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use(express.static('uploads'))
+// Middleware to add 'Access-Control-Allow-Origin' header
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  });
+
 // Access static display of images in /uploads
 // e.g. localhost:3000/invoices/invoicename.jpg displays invoicename.jpg in the browser
+app.use(express.static('uploads'))
 
+// replace with own local or cloud database connection string
 const MONGODB_URI =
 'mongodb+srv://Cluster74480:VEdqfVhJQmhI@cluster74480.6iu0518.mongodb.net/?retryWrites=true&w=majority';
 
@@ -25,6 +32,7 @@ mongoose.connect(MONGODB_URI)
     .then(()=> app.listen(4000))
     .catch((err)=>console.log('Could not connect to MongoDB', err))
 
+// routes to add, get, upload, delete, modify (with restriction) and export (invoices, soas and products)
 app.use((req,res,next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     next()
