@@ -15,11 +15,12 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     next();
   });
-  
+
 // Access static display of images in /uploads
 // e.g. localhost:3000/invoices/invoicename.jpg displays invoicename.jpg in the browser
 app.use(express.static('uploads'))
 
+// replace with own local or cloud database connection string
 const MONGODB_URI =
 'mongodb://localhost/newecon';
 
