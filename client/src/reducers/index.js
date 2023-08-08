@@ -5,8 +5,8 @@ import auth from './auth';
 //import post from './post';
 
 export default combineReducers({
-  alert
-  //auth,
+  alert,
+  auth
   //profile,
  // post
 });
