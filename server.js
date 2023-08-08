@@ -6,7 +6,7 @@ const app = express();
 //Connect Database
 connectDB();
 
-//Init Middleware
+//Init Middleware (Bpdyparser)
 app.use(express.json({extended: false}));
 
 app.get("/", (req, res) => {
