@@ -38,6 +38,22 @@ router.get('/filter', async (req, res) => {
   try {
     let queryObject = {}
     if (req.query.SupplierName){queryObject.SupplierName=req.query.SupplierName}
+    // query from startDate to endDate, inclusive
+    if (req.query.startDate && req.query.endDate){
+      // parse startDate
+      let [startMonth, startYear] = req.query.startDate.split('-')
+      startMonth = parseInt(startMonth) - 1
+      startYear = parseInt(startYear)
+      // parse endDate
+      let [endMonth, endYear] = req.query.endDate.split('-')
+      endMonth = parseInt(endMonth) - 1
+      endYear = parseInt(endYear)
+      
+      queryObject.Date = {
+        $gte: new Date(startYear, startMonth),
+        $lte: new Date(endYear, endMonth)
+      }
+    }
     const data = await CreditNote.find(queryObject);
     res.status(200).json(data);
   } catch (err) {
