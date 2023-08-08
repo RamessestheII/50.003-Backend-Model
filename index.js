@@ -15,16 +15,20 @@ app.use(express.static('uploads'))
 // e.g. localhost:3000/invoices/invoicename.jpg displays invoicename.jpg in the browser
 
 const MONGODB_URI =
-'mongodb://localhost/newecon';
+'mongodb+srv://Cluster74480:VEdqfVhJQmhI@cluster74480.6iu0518.mongodb.net/?retryWrites=true&w=majority';
 
 app.set('view engine', 'ejs')
 
 
 mongoose.connect(MONGODB_URI)
     .then(()=>console.log('Connected to MongoDB'))
-    .then(()=> app.listen(3000))
+    .then(()=> app.listen(4000))
     .catch((err)=>console.log('Could not connect to MongoDB', err))
 
+app.use((req,res,next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    next()
+})
 app.use('/invoice', invoiceRoutes)
 app.use('/soa', soaRoutes)
 app.use('/creditnote', creditNoteRoutes)

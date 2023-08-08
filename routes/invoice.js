@@ -18,6 +18,7 @@ router.get('/', async (req, res) => {
     if (!data) {
       return res.status(404).json({ message: 'Document not found' });
     }
+    res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({ error: err });

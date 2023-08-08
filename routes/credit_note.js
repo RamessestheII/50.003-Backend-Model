@@ -29,7 +29,7 @@ router.get('/all', async (req, res) => {
   try {
     const data = await CreditNote.find({});
     res.status(200).json(data);
-  } catch (err) {
+   } catch (err) {
     res.status(500).json({ error: err });
   }
 });
