@@ -16,7 +16,7 @@ const uploadRec = multer({ dest:'uploads/receipts', fileFilter: fileUtils.upload
 
 router.get('/', async (req, res) => {
   try {
-    const data = await Invoice.findById(req.query.id);
+    const data = await Invoice.findById(req.query.id).populate('Supplier', 'SupplierName -_id')
     if (!data) {
       return res.status(404).json({ message: 'Document not found' });
     }
