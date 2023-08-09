@@ -17,7 +17,7 @@ const upload = multer({ dest:'uploads/soas', fileFilter: fileUtils.fileFilter})
 
 router.get('/', async (req, res) => {
   try {
-    const data = await Soa.findById(req.query.id);
+    const data = await Soa.findById(req.query.id).populate('Supplier', 'SupplierName -_id');
     if (!data) {
       return res.status(404).json({ message: 'Document not found' });
     }
@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
 
 router.get('/all', async (req, res) => {
   try {
-    const data = await Soa.find({});
+    const data = await Soa.find({}).populate('Supplier', 'SupplierName -_id');
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({ error: err });
@@ -58,7 +58,7 @@ router.get('/filter', async (req, res) => {
         $lte: new Date(endYear, endMonth)
       }
     }
-    const data = await Soa.find(queryObject);
+    const data = await Soa.find(queryObject).populate('Supplier', 'SupplierName -_id');
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({ error: err });
