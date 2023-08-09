@@ -61,10 +61,16 @@ Expect returned data in the format {path: _filepath_}
     id: _invoiceid_<br/>
 }
 
++ Get invoice data as csv, filter by year/s and supplier:<br/>
+**GET** localhost:3000/invoice/exportinv?Supplier=_supplierid_&startDate=_startyear_&endDate=_endyear_<br/>
+
++ Get product data as csv, filter by year/s and supplier:<br/>
+**GET** localhost:3000/invoice/exportpdt?Supplier=_supplierid_&startDate=_startyear_&endDate=_endyear_<br />
+
 + Delete an invoice<br/>
 **DELETE** localhost:3000/invoice/delete/_invoiceid_
 
-## Dependencies:
+## Install Dependencies:
 + Windows:<br/>
 Install Image Magick from https://imagemagick.org/script/download.php#windows<br/>
 Install Ghostscript from https://www.ghostscript.com/releases/gsdnld.html<br/>
